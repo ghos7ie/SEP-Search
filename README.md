@@ -4,7 +4,7 @@
 # Current Features
 
 
-# Cleaning Edurec Excel
+## Cleaning Edurec Excel
 1. Getting unique university names and mapping them to their respective regions and countries
 2. Cleaning the data
 - Removed rows without partner universities
@@ -17,3 +17,17 @@
 - Several courses are outdated/not offered in AY2324/have been replaced with newer ones/"upgraded" to higher level. Am deciding to leave as is. (MOSTLY LSM COURSES)
     - Course clash such as PF4202 is currently ```Work Experience Internship``` but was ```Safety, Health and Environmental Management```
     - PS Courses pulled from [this website](https://fass.nus.edu.sg/chs/wp-content/uploads/sites/3/2020/08/Cohort-2018-List-of-Recognised-Modules.pdf)
+
+
+# Backend
+
+# Frontend
+
+
+# Learnings
+- Context
+    - way to data across multiple components without passing it through every intermediate component
+    - like child 3 can access parent data without passing through child 0 to 2
+- UI
+    - wanted to try using Mantine UI but the change from JS to TS was a bit too much to handle (not sure how to handle getting values from multi-select etc.)
+    - so dropped back to Bootstrap

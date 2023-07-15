@@ -7,7 +7,7 @@ function ThemeButton() {
 
     return (
         <ActionIcon
-            variant="outline"
+            variant="filled"
             color={dark ? 'yellow' : 'blue'}
             onClick={() => toggleColorScheme()}
             title="Toggle color scheme">

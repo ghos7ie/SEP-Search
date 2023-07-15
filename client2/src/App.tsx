@@ -1,7 +1,7 @@
 import { ColorScheme, ColorSchemeProvider, MantineProvider, Text } from '@mantine/core';
-import ThemeButton from "./components/ThemeButton";
 import { useLocalStorage } from '@mantine/hooks';
 import HeaderBar from './components/Header';
+import SearchContextProvider from './context/SearchContext';
 
 export default function App() {
   const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
@@ -16,7 +16,9 @@ export default function App() {
   return (
     <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
       <MantineProvider withGlobalStyles withNormalizeCSS theme={{ colorScheme }}>
-        <HeaderBar />
+        <SearchContextProvider>
+          <HeaderBar />
+        </SearchContextProvider>
       </MantineProvider>
     </ColorSchemeProvider>
   );
