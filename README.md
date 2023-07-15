@@ -26,10 +26,9 @@
     - Course clash such as PF4202 is currently ```Work Experience Internship``` but was ```Safety, Health and Environmental Management```
     - PS Courses pulled from [this website](https://fass.nus.edu.sg/chs/wp-content/uploads/sites/3/2020/08/Cohort-2018-List-of-Recognised-Modules.pdf)
 
-# Frontend
-- Learnt once again that I do not want to do frontend work.
-
 # Learnings
+- Frontend
+    - Learnt once again that I do not want to do frontend work.
 - ReactContext API
     - way to share data across multiple components without passing it through every intermediate component
     - like child 3 can access parent data without passing through child 0 to 2
