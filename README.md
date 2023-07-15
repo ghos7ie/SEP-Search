@@ -2,7 +2,11 @@
  Filtering through Edurec's site takes a long and arduous time. This site serves to speed up that process and also make it easier to search multiple universities for offerred modules.
 
 # Current Features
-
+1. Searching for PUs through the following criterias:
+    - Region/Country
+    - Faculty
+    - Partner Universities
+    - Courses
 
 ## Cleaning Edurec Excel
 1. Getting unique university names and mapping them to their respective regions and countries
@@ -22,12 +26,15 @@
 # Backend
 
 # Frontend
-
+- Learnt once again that I do not want to do frontend work.
 
 # Learnings
 - Context
-    - way to data across multiple components without passing it through every intermediate component
+    - way to share data across multiple components without passing it through every intermediate component
     - like child 3 can access parent data without passing through child 0 to 2
 - UI
     - wanted to try using Mantine UI but the change from JS to TS was a bit too much to handle (not sure how to handle getting values from multi-select etc.)
-    - so dropped back to Bootstrap
+    - so dropped back to Material UI, even though it isn't as aesthetically pleasing
+- Database
+    - Learnt how to use IN
+    - Refreshed memory on how to use table joins
