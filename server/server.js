@@ -53,6 +53,113 @@ app.get("/api/v1", async (req, res) => {
     }
 });
 
+// app.post("/api/v1/mappings1", async (req, res) => {
+//     try {
+//         const query = req.body;
+//         const region = query.region;
+//         const country = query.country;
+//         const faculty = query.faculty;
+//         const pu = query.pu;
+//         const courses = query.courses;
+//         const o_courses = query.o_courses;
+
+//         console.log(query);
+//         const base = `
+//             SELECT region.name as region, country.name as country, faculty.name as faculty, partner_university.name as pu, 
+//                 pu_course, pu_course_name, pu_course_units, nus_course_id, nus_course.name, nus_course_units, pre_approved
+//             FROM mappings
+//             JOIN country ON country.id = country_id
+//             JOIN region ON country.region_id = region.id
+//             JOIN faculty ON faculty_id = faculty.id
+//             JOIN partner_university ON pu_id = partner_university.id
+//             JOIN nus_course ON nus_course_id = nus_course.id
+//         `;
+
+//         if ([region, country, faculty, pu, courses].every(field => field.length === 0)) {
+//             res.status(500).json({
+//                 status: "error",
+//                 data: "Please fill in at least 1 field!"
+//             });
+//         }
+//         else {
+//             let append = "WHERE ";
+//             // checks if there was any previous clauses added
+//             let prev = false;
+//             if (region.length != 0) {
+//                 if (prev) {
+//                     append += "AND "
+//                 }
+//                 append += `region_id IN (${region.map(i => `'${i}'`).join(', ')}) `;
+//                 prev = true;
+//             }
+//             if (country.length != 0) {
+//                 if (prev) {
+//                     append += "AND "
+//                 }
+//                 append += `country_id IN (${country.map(i => `'${i}'`).join(', ')}) `;
+//                 prev = true;
+//             }
+//             if (faculty.length != 0) {
+//                 if (prev) {
+//                     append += "AND "
+//                 }
+//                 append += `faculty_id IN (${faculty.map(i => `'${i}'`).join(', ')}) `;
+//                 prev = true;
+//             }
+//             if (pu.length != 0) {
+//                 if (prev) {
+//                     append += "AND "
+//                 }
+//                 append += `pu_id IN (${pu.map(i => `'${i}'`).join(', ')}) `;
+//                 prev = true;
+//             }
+//             if (courses.length != 0) {
+//                 if (prev) {
+//                     append += "AND "
+//                 }
+//                 append += `nus_course_id IN (${courses.map(i => `'${i}'`).join(', ')}) `;
+//                 prev = true;
+//             }
+
+//             const results = await db.query(base + append);
+//             const groupedData = results.rows.reduce((result, obj) => {
+//                 const pu = obj.pu;
+//                 if (!result[pu]) {
+//                     result[pu] = [];
+//                 }
+//                 result[pu].push(obj);
+//                 return result;
+//             }, {});
+//             const sortedData = Object.entries(groupedData).sort(([keyA], [keyB]) => keyA.localeCompare(keyB));
+//             // Convert the sorted array back into an object
+//             const sortedObject = Object.fromEntries(sortedData);
+
+//             const sortedKeys = Object.keys(sortedObject).sort((a, b) => sortedObject[b].length - sortedObject[a].length);
+
+//             const sortedObj = sortedKeys.reduce((sorted, key) => {
+//                 sorted[key] = sortedObject[key];
+//                 return sorted;
+//             }, {});
+//             console.log(sortedObj);
+//             res.status(200).json({
+//                 status: "success",
+//                 results_count: Object.keys(sortedData).length,
+//                 data: {
+//                     results: sortedObj
+//                 },
+//             });
+//         }
+//     }
+//     catch (err) {
+//         console.log(err);
+//         res.status(500).json({
+//             status: "error",
+//             data: "something went wrong!",
+//             err: err
+//         });
+//     }
+// });
+
 app.post("/api/v1/mappings", async (req, res) => {
     try {
         const query = req.body;
@@ -61,18 +168,7 @@ app.post("/api/v1/mappings", async (req, res) => {
         const faculty = query.faculty;
         const pu = query.pu;
         const courses = query.courses;
-
-        console.log(query);
-        const base = `
-            SELECT region.name as region, country.name as country, faculty.name as faculty, partner_university.name as pu, 
-                pu_course, pu_course_name, pu_course_units, nus_course_id, nus_course.name, nus_course_units, pre_approved
-            FROM mappings
-            JOIN country ON country.id = country_id
-            JOIN region ON country.region_id = region.id
-            JOIN faculty ON faculty_id = faculty.id
-            JOIN partner_university ON pu_id = partner_university.id
-            JOIN nus_course ON nus_course_id = nus_course.id
-        `;
+        const o_courses = query.o_courses;
 
         if ([region, country, faculty, pu, courses].every(field => field.length === 0)) {
             res.status(500).json({
@@ -81,79 +177,182 @@ app.post("/api/v1/mappings", async (req, res) => {
             });
         }
         else {
-            let append = "WHERE ";
-            // checks if there was any previous clauses added
-            let prev = false;
-            if (region.length != 0) {
-                if (prev) {
-                    append += "AND "
+            if (courses.length == 0) {
+                const base = `
+                    SELECT region.name as region, country.name as country, faculty.name as faculty, partner_university.name as pu, 
+                        pu_course, pu_course_name, pu_course_units, nus_course_id, nus_course.name, nus_course_units, pre_approved
+                    FROM mappings
+                    JOIN country ON country.id = country_id
+                    JOIN region ON country.region_id = region.id
+                    JOIN faculty ON faculty_id = faculty.id
+                    JOIN partner_university ON pu_id = partner_university.id
+                    JOIN nus_course ON nus_course_id = nus_course.id
+                `;
+                let append = "WHERE ";
+                // checks if there was any previous clauses added
+                let prev = false;
+                if (region.length != 0) {
+                    if (prev) {
+                        append += "AND "
+                    }
+                    append += `mappings.region_id IN (${region.map(i => `${i}`).join(', ')}) `;
+                    prev = true;
                 }
-                append += `region_id IN (${region.map(i => `'${i}'`).join(', ')}) `;
-                prev = true;
-            }
-            if (country.length != 0) {
-                if (prev) {
-                    append += "AND "
+                if (country.length != 0) {
+                    if (prev) {
+                        append += "AND "
+                    }
+                    append += `mappings.country_id IN (${country.map(i => `${i}`).join(', ')}) `;
+                    console.log(append);
+                    prev = true;
                 }
-                append += `country_id IN (${country.map(i => `'${i}'`).join(', ')}) `;
-                prev = true;
-            }
-            if (faculty.length != 0) {
-                if (prev) {
-                    append += "AND "
+                if (faculty.length != 0) {
+                    if (prev) {
+                        append += "AND "
+                    }
+                    append += `mappings.faculty_id IN (${faculty.map(i => `${i}`).join(', ')}) `;
+                    prev = true;
                 }
-                append += `faculty_id IN (${faculty.map(i => `'${i}'`).join(', ')}) `;
-                prev = true;
-            }
-            if (pu.length != 0) {
-                if (prev) {
-                    append += "AND "
+                if (pu.length != 0) {
+                    if (prev) {
+                        append += "AND "
+                    }
+                    append += `mappings.pu_id IN (${pu.map(i => `${i}`).join(', ')}) `;
+                    prev = true;
                 }
-                append += `pu_id IN (${pu.map(i => `'${i}'`).join(', ')}) `;
-                prev = true;
-            }
-            if (courses.length != 0) {
-                if (prev) {
-                    append += "AND "
+                if (o_courses.length != 0) {
+                    if (prev) {
+                        append += "AND "
+                    }
+                    append += `mappings.nus_course_id IN (${o_courses.map(i => `'${i}'`).join(', ')}) `;
+                    prev = true;
                 }
-                append += `nus_course_id IN (${courses.map(i => `'${i}'`).join(', ')}) `;
-                prev = true;
-            }
+                const results = await db.query(base + append);
+                const groupedData = results.rows.reduce((result, obj) => {
+                    const pu = obj.pu;
+                    if (!result[pu]) {
+                        result[pu] = [];
+                    }
+                    result[pu].push(obj);
+                    return result;
+                }, {});
+                const sortedData = Object.entries(groupedData).sort(([keyA], [keyB]) => keyA.localeCompare(keyB));
+                // Convert the sorted array back into an object
+                const sortedObject = Object.fromEntries(sortedData);
 
-            const results = await db.query(base + append);
-            const groupedData = results.rows.reduce((result, obj) => {
-                const pu = obj.pu;
-                if (!result[pu]) {
-                    result[pu] = [];
+                const sortedKeys = Object.keys(sortedObject).sort((a, b) => sortedObject[b].length - sortedObject[a].length);
+
+                const sortedObj = sortedKeys.reduce((sorted, key) => {
+                    sorted[key] = sortedObject[key];
+                    return sorted;
+                }, {});
+                console.log(sortedObj);
+                res.status(200).json({
+                    status: "success",
+                    results_count: Object.keys(sortedData).length,
+                    data: {
+                        results: sortedObj
+                    },
+                });
+            }
+            else {
+                const base = `
+                    SELECT region.name AS region, country.name AS country, faculty.name AS faculty, partner_university.name AS pu, 
+                    pu_course, pu_course_name, pu_course_units, nus_course_id, nus_course.name AS nus_course_name, nus_course_units, pre_approved
+                    FROM mappings
+                    JOIN country ON country.id = country_id
+                    JOIN region ON country.region_id = region.id
+                    JOIN faculty ON faculty_id = faculty.id
+                    JOIN partner_university ON pu_id = partner_university.id
+                    JOIN nus_course ON nus_course_id = nus_course.id
+                    WHERE partner_university.name IN (
+                        SELECT pu_name
+                        FROM (
+                            SELECT partner_university.name AS pu_name, nus_course_id
+                            FROM mappings
+                            JOIN partner_university ON pu_id = partner_university.id
+                            WHERE nus_course_id IN (${courses.map(id => `'${id}'`).join(', ')})
+                            GROUP BY partner_university.name, nus_course_id
+                    ) AS subquery
+                    GROUP BY pu_name
+                    HAVING COUNT(*) = ${courses.length}
+                )
+                `;
+                let append = "AND ";
+                // checks if there was any previous clauses added
+                let prev = false;
+                if (region.length != 0) {
+                    if (prev) {
+                        append += "AND "
+                    }
+                    append += `mappings.region_id IN (${region.map(i => `${i}`).join(', ')}) `;
+                    prev = true;
                 }
-                result[pu].push(obj);
-                return result;
-            }, {});
-            const sortedData = Object.entries(groupedData).sort(([keyA], [keyB]) => keyA.localeCompare(keyB));
-            // Convert the sorted array back into an object
-            const sortedObject = Object.fromEntries(sortedData);
+                if (country.length != 0) {
+                    if (prev) {
+                        append += "AND "
+                    }
+                    append += `mappings.country_id IN (${country.map(i => `${i}`).join(', ')}) `;
+                    prev = true;
+                }
+                if (faculty.length != 0) {
+                    if (prev) {
+                        append += "AND "
+                    }
+                    append += `mappings.faculty_id IN (${faculty.map(i => `${i}`).join(', ')}) `;
+                    prev = true;
+                }
+                if (pu.length != 0) {
+                    if (prev) {
+                        append += "AND "
+                    }
+                    append += `mappings.pu_id IN (${pu.map(i => `${i}`).join(', ')}) `;
+                    prev = true;
+                }
+                if (courses.length != 0 || o_courses.length != 0) {
+                    if (prev) {
+                        append += "AND "
+                    }
+                    const c = [].concat(courses, o_courses);
+                    append += `mappings.nus_course_id IN (${c.map(i => `'${i}'`).join(', ')}) `;
+                    prev = true;
+                }
+                const results = await db.query(base + append);
+                const groupedData = results.rows.reduce((result, obj) => {
+                    const pu = obj.pu;
+                    if (!result[pu]) {
+                        result[pu] = [];
+                    }
+                    result[pu].push(obj);
+                    return result;
+                }, {});
+                const sortedData = Object.entries(groupedData).sort(([keyA], [keyB]) => keyA.localeCompare(keyB));
+                // Convert the sorted array back into an object
+                const sortedObject = Object.fromEntries(sortedData);
 
-            const sortedKeys = Object.keys(sortedObject).sort((a, b) => sortedObject[b].length - sortedObject[a].length);
+                const sortedKeys = Object.keys(sortedObject).sort((a, b) => sortedObject[b].length - sortedObject[a].length);
 
-            const sortedObj = sortedKeys.reduce((sorted, key) => {
-                sorted[key] = sortedObject[key];
-                return sorted;
-            }, {});
-            console.log(sortedObj);
-            res.status(200).json({
-                status: "success",
-                results_count: Object.keys(sortedData).length,
-                data: {
-                    results: sortedObj
-                },
-            });
+                const sortedObj = sortedKeys.reduce((sorted, key) => {
+                    sorted[key] = sortedObject[key];
+                    return sorted;
+                }, {});
+                console.log(sortedObj);
+                res.status(200).json({
+                    status: "success",
+                    results_count: Object.keys(sortedData).length,
+                    data: {
+                        results: sortedObj
+                    },
+                });
+            }
         }
     }
     catch (err) {
         console.log(err);
         res.status(500).json({
             status: "error",
-            data: "something went wrong!"
+            data: "something went wrong!",
+            err: err
         });
     }
 });

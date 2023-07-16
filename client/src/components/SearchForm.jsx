@@ -10,6 +10,7 @@ function FormCard() {
         faculty: [],
         pu: [],
         courses: [],
+        o_courses: [],
     });
 
     const [validationError, setValidationError] = useState(false);
@@ -21,6 +22,7 @@ function FormCard() {
         faculty: [],
         pu: [],
         courses: [],
+        o_courses: [],
     });
 
     const { setPUs, setSearched } = useContext(PUContext);
@@ -52,6 +54,7 @@ function FormCard() {
                         label: item.name
                     })),
                     courses: courseData,
+                    o_courses: courseData
                 });
             } catch (err) {
                 console.error("Error fetching data:", err);
@@ -66,6 +69,18 @@ function FormCard() {
             ...formValues,
             [field]: value.map((option) => option.id),
         };
+
+        // Check if the selected courses and o_courses have any common options
+        if (field === 'courses') {
+            updatedValues.o_courses = updatedValues.o_courses.filter(
+                (id) => !updatedValues[field].includes(id)
+            );
+        } else if (field === 'o_courses') {
+            updatedValues.courses = updatedValues.courses.filter(
+                (id) => !updatedValues[field].includes(id)
+            );
+        }
+
         setFormValues(updatedValues);
     };
 
@@ -85,6 +100,7 @@ function FormCard() {
                     faculty: formValues.faculty,
                     pu: formValues.pu,
                     courses: formValues.courses,
+                    o_courses: formValues.o_courses,
                 });
                 setLoading(false);
                 setPUs(response.data);
@@ -96,7 +112,6 @@ function FormCard() {
 
     return (
         <Box position="relative">
-
             <form onSubmit={handleSubmit}>
                 <Stack spacing={2}>
                     <Autocomplete
@@ -207,6 +222,28 @@ function FormCard() {
                                 {...params}
                                 variant="outlined"
                                 label="Courses"
+                                placeholder="Select must-maps"
+                            />
+                        )}
+                    />
+                    <Autocomplete
+                        multiple
+                        filterSelectedOptions
+                        disableCloseOnSelect
+                        fullWidth
+                        options={options.o_courses}
+                        getOptionLabel={(option) => option.label}
+                        value={options.o_courses.filter((option) =>
+                            formValues.o_courses.includes(option.id)
+                        )}
+                        onChange={(event, value) =>
+                            handleChange("o_courses", value)
+                        }
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                variant="outlined"
+                                label="Optional Courses"
                                 placeholder="Select may-maps"
                             />
                         )}
