@@ -16,7 +16,7 @@ app.use(cors());
 
 // get all form fields
 // runs when the page is first opened
-app.get("/api/v1/", async (req, res) => {
+app.get("/api/v1", async (req, res) => {
     try {
         const region = await db.query(`SELECT * FROM region ORDER BY name ASC;`);
         const country = await db.query(`
