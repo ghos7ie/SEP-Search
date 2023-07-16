@@ -39,14 +39,6 @@ const FAQ = () => {
                     </Typography>
                 </div>
                 <div>
-                    <Typography variant="h6">3. Why is your FAQ so bare?</Typography>
-                    <Typography variant="body2">
-                        <span>
-                            I don't know what else to put.
-                        </span>
-                    </Typography>
-                </div>
-                <div>
                     <Typography variant="h6">4. I would like to help improve the website!</Typography>
                     <Typography variant="body2">
                         <span>
@@ -62,7 +54,7 @@ const FAQ = () => {
                     <Typography variant="h6">5. How can I contact you?</Typography>
                     <Typography variant="body2">
                         <span>
-                            Contact me at <a href="mailto:elyreumcode@gmail.com">elyreumcode@gmail.com</a>
+                            You can contact me on <a href="https://old.reddit.com/user/sep-search/">reddit</a>!
                         </span>
                     </Typography>
                 </div>
