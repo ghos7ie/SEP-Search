@@ -221,7 +221,7 @@ function FormCard() {
                             <TextField
                                 {...params}
                                 variant="outlined"
-                                label="Courses"
+                                label="Essential Courses"
                                 placeholder="Select must-maps"
                             />
                         )}
