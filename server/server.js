@@ -119,6 +119,8 @@ app.post("/api/v1/mappings", async (req, res) => {
                 append += `nus_course_id IN (${courses.map(i => `'${i}'`).join(', ')}) `;
                 prev = true;
             }
+
+            append +=`ORDER BY COUNT(pu) DESC;`
             const results = await db.query(base + append);
             const groupedData = results.rows.reduce((result, obj) => {
                 const pu = obj.pu;
