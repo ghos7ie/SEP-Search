@@ -120,7 +120,6 @@ app.post("/api/v1/mappings", async (req, res) => {
                 prev = true;
             }
 
-            append +=`ORDER BY COUNT(pu) DESC;`
             const results = await db.query(base + append);
             const groupedData = results.rows.reduce((result, obj) => {
                 const pu = obj.pu;
@@ -130,7 +129,7 @@ app.post("/api/v1/mappings", async (req, res) => {
                 result[pu].push(obj);
                 return result;
             }, {});
-            const sortedData = Object.entries(groupedData).sort(([keyA], [keyB]) => keyA.localeCompare(keyB));
+            const sortedData = Object.entries(groupedData).sort(([keyA], [keyB]) => keyA.localeCompare(keyB)).sort((a, b) => obj[b].length - obj[a].length);;
             // Convert the sorted array back into an object
             const sortedObject = Object.fromEntries(sortedData);
             console.log(groupedData);
