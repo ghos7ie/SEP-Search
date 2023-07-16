@@ -11,7 +11,6 @@ export default function Results() {
     const { pu, searched } = useContext(PUContext);
     const items = pu?.data?.results || [];
     const render = [];
-    console.log(items);
     if (searched && pu.results_count > 0) {
         Object.keys(items).map((uni, index) => (
             render.push(
