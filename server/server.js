@@ -47,7 +47,8 @@ app.get("/api/v1", async (req, res) => {
         console.log(err);
         res.status(500).json({
             status: "error",
-            data: "something went wrong!"
+            data: "something went wrong!",
+            ex: err
         });
     }
 });
