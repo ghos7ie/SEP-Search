@@ -78,7 +78,7 @@ export default function Results() {
             ) : (
                 <div>
                     {searched ? (
-                        <Alert severity="warning">Please refine your search! We could not find a suitable PU for you :(</Alert>
+                        <Alert severity="error">No results found.</Alert>
                     ) : (
                         <Alert severity="info">Please start your search</Alert>
                     )}
