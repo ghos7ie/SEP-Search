@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { Accordion, AccordionSummary, AccordionDetails, Typography, List, Chip, Stack, Alert, TableContainer, Table, TableCell, Paper, TableHead, TableRow, TableBody, Badge } from '@mui/material';
+import { Accordion, AccordionSummary, AccordionDetails, Typography, List, Chip, Stack, Alert, TableContainer, Table, TableCell, Paper, TableHead, TableRow, TableBody } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { PUContext } from '../context/PUContext';
 import FlagCircleIcon from '@mui/icons-material/FlagCircle';
