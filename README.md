@@ -5,6 +5,14 @@
 1. To learn React + MERN
 2. BEEF MY PORTFOLIO
 
+# Tech Stack
+- Database - PostgreSQL
+- Backend - ExpressJS
+- Frontend - ReactJS with Material-UI
+- Hosted on AWS EC2, NGINX
+
+Uses PM2 to handle automatic restart of server
+
 # Current Features
 1. Searching for PUs through the following criterias:
     - Region/Country

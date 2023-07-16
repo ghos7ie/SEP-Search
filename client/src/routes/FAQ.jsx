@@ -20,7 +20,21 @@ const FAQ = () => {
                         <span>
                             Due to data cleaning etc., some rows of data were removed.
                             <br />
-                            You can check my <a href="https://github.com/ghos7ie/SEP-Search">repository page</a> for more information on data removed!
+                            <ul>
+                                <li>Removed rows without partner universities</li>
+                                <li>Renamed several universities to be in line with GRO website</li>
+                                <li>Filled PU Module 2 with &#39;-&#39; for those that do not have a module code (esp from IE Business School)</li>
+                                <li>One module from National Chiao Tung University (Taiwan) removed due to lack of both partner module and NUS module code</li>
+                                <li>32 modules from FASS and CDE removed due to no Partner University present</li>
+                                <li>Condensed all alternative mappings (141 new rows)</li>
+                                <li>Added course names to those missing + used <code>No_name</code> for those that can&#39;t be found either through NUSMods or Google. (ard 500 rows)</li>
+                                <li>Several courses are outdated/not offered in AY2324/have been replaced with newer ones/&quot;upgraded&quot; to higher level. Am deciding to leave as is. (MOSTLY LSM COURSES)<ul>
+                                    <li>Course clash such as PF4202 is currently <code>Work Experience Internship</code> but was <code>Safety, Health and Environmental Management</code></li>
+                                    <li>PS Courses pulled from <a href="https://fass.nus.edu.sg/chs/wp-content/uploads/sites/3/2020/08/Cohort-2018-List-of-Recognised-Modules.pdf">this website</a></li>
+                                </ul>
+                                </li>
+                            </ul>
+
                         </span>
                     </Typography>
                 </div>
