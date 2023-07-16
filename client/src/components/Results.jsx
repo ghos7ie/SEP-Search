@@ -11,12 +11,16 @@ export default function Results() {
     const { pu, searched } = useContext(PUContext);
     const items = pu?.data?.results || [];
     const render = [];
+    console.log(items);
     if (searched && pu.results_count > 0) {
         Object.keys(items).map((uni, index) => (
             render.push(
                 <Accordion key={`${uni}_${index}`} TransitionProps={{ timeout: 150 }}>
                     <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-                        <Typography variant="h6">{uni}</Typography>
+                        <Stack direction="row" spacing={1}>
+                            <Typography variant="h6">{uni} </Typography>
+                            <Typography sx={{ color: 'text.secondary' }}>{items[uni].length}</Typography>
+                        </Stack>
                     </AccordionSummary>
                     <AccordionDetails>
                         <Stack spacing={2}>
