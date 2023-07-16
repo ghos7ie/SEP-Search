@@ -129,15 +129,22 @@ app.post("/api/v1/mappings", async (req, res) => {
                 result[pu].push(obj);
                 return result;
             }, {});
-            const sortedData = Object.entries(groupedData).sort(([keyA], [keyB]) => keyA.localeCompare(keyB)).sort((a, b) => obj[b].length - obj[a].length);;
+            const sortedData = Object.entries(groupedData).sort(([keyA], [keyB]) => keyA.localeCompare(keyB));
             // Convert the sorted array back into an object
             const sortedObject = Object.fromEntries(sortedData);
-            console.log(groupedData);
+
+            const sortedKeys = Object.keys(sortedObject).sort((a, b) => sortedObject[b].length - sortedObject[a].length);
+
+            const sortedObj = sortedKeys.reduce((sorted, key) => {
+                sorted[key] = sortedObject[key];
+                return sorted;
+            }, {});
+            console.log(sortedObj);
             res.status(200).json({
                 status: "success",
                 results_count: Object.keys(sortedData).length,
                 data: {
-                    results: sortedObject
+                    results: sortedObj
                 },
             });
         }
