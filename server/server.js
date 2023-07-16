@@ -195,7 +195,7 @@ app.post("/api/v1/mappings", async (req, res) => {
                     if (prev) {
                         append += "AND "
                     }
-                    append += `mappings.region_id IN (${region.map(i => `${i}`).join(', ')}) `;
+                    append += `country.region_id IN (${region.map(i => `${i}`).join(', ')}) `;
                     prev = true;
                 }
                 if (country.length != 0) {
@@ -246,7 +246,6 @@ app.post("/api/v1/mappings", async (req, res) => {
                     sorted[key] = sortedObject[key];
                     return sorted;
                 }, {});
-                console.log(sortedObj);
                 res.status(200).json({
                     status: "success",
                     results_count: Object.keys(sortedData).length,
@@ -285,7 +284,7 @@ app.post("/api/v1/mappings", async (req, res) => {
                     if (prev) {
                         append += "AND "
                     }
-                    append += `mappings.region_id IN (${region.map(i => `${i}`).join(', ')}) `;
+                    append += `country.region_id IN (${region.map(i => `${i}`).join(', ')}) `;
                     prev = true;
                 }
                 if (country.length != 0) {
@@ -336,7 +335,6 @@ app.post("/api/v1/mappings", async (req, res) => {
                     sorted[key] = sortedObject[key];
                     return sorted;
                 }, {});
-                console.log(sortedObj);
                 res.status(200).json({
                     status: "success",
                     results_count: Object.keys(sortedData).length,
