@@ -49,7 +49,7 @@ export default function Results() {
                                         {items[uni].map((item, subIndex) => (
                                             <TableRow key={subIndex} >
                                                 <TableCell component="th" scope="row">{item.nus_course_id}</TableCell>
-                                                <TableCell>{item.name}</TableCell>
+                                                <TableCell>{item.nus_course_name}</TableCell>
                                                 <TableCell align="right">{item.nus_course_units}</TableCell>
                                                 <TableCell>{item.pu_course}</TableCell>
                                                 <TableCell>{item.pu_course_name}</TableCell>
