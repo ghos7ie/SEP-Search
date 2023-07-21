@@ -94,13 +94,13 @@ function FormCard() {
             case "region":
                 // must filter if field is already populated too
                 if (formValues.country.length !== 0) {
-                    updatedValues.country = formValues.country.filter(c => value.some(r => c.r_id === r.id));
+                    updatedValues.country = formValues.country.filter(c => value.some(r => c.r_id === r));
                 }
                 // update countries
                 options.country = value.length === 0 ? master.country : master.country.filter(c => value.some(r => c.r_id === r.id));
                 // must filter if field is already populated too
                 if (formValues.pu.length !== 0) {
-                    updatedValues.pu = formValues.pu.filter(p => value.some(r => p.r_id === r.id));
+                    updatedValues.pu = formValues.pu.filter(p => value.some(r => p.r_id === r));
                 }
                 // update pu
                 options.pu = value.length === 0 ? master.pu : master.pu.filter(p => value.some(r => p.r_id === r.id));
@@ -110,10 +110,14 @@ function FormCard() {
                 // TODO
                 // refilter pu if selected prior to country selection
                 if (updatedValues.pu.length !== 0) {
-                    updatedValues.pu = updatedValues.pu.filter(p => value.some(c => p.c_id === c.id));
+                    updatedValues.pu = updatedValues.pu.filter(p => value.some(c => p.c_id === c));
                 }
                 // update pu
                 options.pu = value.length === 0 ? master.pu : master.pu.filter(p => value.some(c => p.c_id === c.id));
+                // if region is filled
+                if (formValues.region.length !== 0) {
+                    options.pu = options.pu.filter(p => formValues.region.some(r => p.r_id === r));
+                }
                 break;
             // ensure that selected courses does not appear in both course and o_courses
             case "courses":
