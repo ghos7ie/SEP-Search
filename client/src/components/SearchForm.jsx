@@ -92,12 +92,9 @@ function FormCard() {
         switch (field) {
             // setting up filtering for the region, countries and pu
             case "region":
-                console.log(updatedValues);
-                console.log(formValues);
                 // must filter if field is already populated too
                 if (formValues.country.length !== 0) {
                     updatedValues.country = formValues.country.filter(c => value.some(r => c.r_id === r.id));
-                    console.log(updatedValues.country)
                 }
                 // update countries
                 options.country = value.length === 0 ? master.country : master.country.filter(c => value.some(r => c.r_id === r.id));
@@ -145,7 +142,6 @@ function FormCard() {
         } else {
             setValidationError(false);
             setLoading(true);
-            console.log(formValues)
             try {
                 const response = await searchAPI.post("/mappings", {
                     region: formValues.region,

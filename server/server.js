@@ -207,7 +207,6 @@ app.post("/api/v1/mappings", async (req, res) => {
                         append += "AND "
                     }
                     append += `mappings.country_id IN (${country.map(i => `${i}`).join(', ')}) `;
-                    console.log(append);
                     prev = true;
                 }
                 if (faculty.length != 0) {
