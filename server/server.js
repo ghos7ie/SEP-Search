@@ -20,12 +20,16 @@ app.get("/api/v1", async (req, res) => {
     try {
         const region = await db.query(`SELECT * FROM region ORDER BY name ASC;`);
         const country = await db.query(`
-        SELECT country.id as id, region.id as region_id, country.name as name 
-        FROM country
-        JOIN region ON country.region_id = region.id
-        ORDER BY name ASC;
+            SELECT country.id as id, region.id as region_id, country.name as name 
+            FROM country
+            JOIN region ON country.region_id = region.id
+            ORDER BY name ASC;
         `);
-        const pu = await db.query("SELECT * FROM partner_university ORDER BY name ASC;");
+        const pu = await db.query(`
+            SELECT country.region_id as region_id, country.id as country_id, partner_university.id as id, partner_university.name as name FROM partner_university 
+            JOIN country ON country.id = country_id
+            ORDER BY name ASC;
+        `);
         const faculty = await db.query("SELECT * FROM faculty ORDER BY name ASC;");
         const courses = await db.query("SELECT * FROM nus_course ORDER BY id ASC;");
         res.status(200).json({

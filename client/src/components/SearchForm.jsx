@@ -16,6 +16,12 @@ function FormCard() {
     const [validationError, setValidationError] = useState(false);
     const [loading, setLoading] = useState(false);
 
+    const [master, setMaster] = useState({
+        region: [],
+        country: [],
+        pu: [],
+    });
+
     const [options, setOptions] = useState({
         region: [],
         country: [],
@@ -35,26 +41,38 @@ function FormCard() {
                     id: item.id,
                     label: `${item.id}: ${item.name}`
                 }));
+                const regionData = response.data.data.region.map((item) => ({
+                    id: item.id,
+                    label: item.name,
+                }));
+                const countryData = response.data.data.country.map((item) => ({
+                    id: item.id,
+                    label: item.name,
+                    r_id: item.region_id
+                }));
+                const facultyData = response.data.data.faculty.map((item) => ({
+                    id: item.id,
+                    label: item.name
+                }));
+                const puData = response.data.data.pu.map((item) => ({
+                    id: item.id,
+                    c_id: item.country_id,
+                    r_id: String(item.region_id),
+                    label: item.name
+                }));
+
                 setOptions({
-                    region: response.data.data.region.map((item) => ({
-                        id: item.id,
-                        label: item.name,
-                    })),
-                    country: response.data.data.country.map((item) => ({
-                        id: item.id,
-                        label: item.name,
-                        rid: item.region_id
-                    })),
-                    faculty: response.data.data.faculty.map((item) => ({
-                        id: item.id,
-                        label: item.name
-                    })),
-                    pu: response.data.data.pu.map((item) => ({
-                        id: item.id,
-                        label: item.name
-                    })),
+                    region: regionData,
+                    country: countryData,
+                    faculty: facultyData,
+                    pu: puData,
                     courses: courseData,
                     o_courses: courseData
+                });
+                setMaster({
+                    region: regionData,
+                    country: countryData,
+                    pu: puData,
                 });
             } catch (err) {
                 console.error("Error fetching data:", err);
@@ -71,14 +89,48 @@ function FormCard() {
         };
 
         // Check if the selected courses and o_courses have any common options
-        if (field === 'courses') {
-            updatedValues.o_courses = updatedValues.o_courses.filter(
-                (id) => !updatedValues[field].includes(id)
-            );
-        } else if (field === 'o_courses') {
-            updatedValues.courses = updatedValues.courses.filter(
-                (id) => !updatedValues[field].includes(id)
-            );
+        switch (field) {
+            // setting up filtering for the region, countries and pu
+            case "region":
+                console.log(updatedValues);
+                console.log(formValues);
+                // must filter if field is already populated too
+                if (formValues.country.length !== 0) {
+                    updatedValues.country = formValues.country.filter(c => value.some(r => c.r_id === r.id));
+                    console.log(updatedValues.country)
+                }
+                // update countries
+                options.country = value.length === 0 ? master.country : master.country.filter(c => value.some(r => c.r_id === r.id));
+                // must filter if field is already populated too
+                if (formValues.pu.length !== 0) {
+                    updatedValues.pu = formValues.pu.filter(p => value.some(r => p.r_id === r.id));
+                }
+                // update pu
+                options.pu = value.length === 0 ? master.pu : master.pu.filter(p => value.some(r => p.r_id === r.id));
+                break;
+            case "country":
+                // if country selected prior, then make sure to add region into region input
+                // TODO
+                // refilter pu if selected prior to country selection
+                if (updatedValues.pu.length !== 0) {
+                    updatedValues.pu = updatedValues.pu.filter(p => value.some(c => p.c_id === c.id));
+                }
+                // update pu
+                options.pu = value.length === 0 ? master.pu : master.pu.filter(p => value.some(c => p.c_id === c.id));
+                break;
+            // ensure that selected courses does not appear in both course and o_courses
+            case "courses":
+                updatedValues.o_courses = updatedValues.o_courses.filter(
+                    (id) => !updatedValues[field].includes(id)
+                );
+                break;
+            case 'o_courses':
+                updatedValues.courses = updatedValues.courses.filter(
+                    (id) => !updatedValues[field].includes(id)
+                );
+                break;
+            default:
+                break;
         }
 
         setFormValues(updatedValues);
@@ -93,6 +145,7 @@ function FormCard() {
         } else {
             setValidationError(false);
             setLoading(true);
+            console.log(formValues)
             try {
                 const response = await searchAPI.post("/mappings", {
                     region: formValues.region,
@@ -127,7 +180,6 @@ function FormCard() {
                         onChange={(event, value) =>
                             handleChange("region", value)
                         }
-                        disabled={formValues.country.length > 0}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
@@ -150,35 +202,12 @@ function FormCard() {
                         onChange={(event, value) =>
                             handleChange("country", value)
                         }
-                        disabled={formValues.region.length > 0}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
                                 variant="outlined"
                                 label="Country"
                                 placeholder="Select country(s)"
-                            />
-                        )}
-                    />
-                    <Autocomplete
-                        multiple
-                        filterSelectedOptions
-                        disableCloseOnSelect
-                        fullWidth
-                        options={options.faculty}
-                        getOptionLabel={(option) => option.label}
-                        value={options.faculty.filter((option) =>
-                            formValues.faculty.includes(option.id)
-                        )}
-                        onChange={(event, value) =>
-                            handleChange("faculty", value)
-                        }
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                variant="outlined"
-                                label="Faculty"
-                                placeholder="Select faculty(s)"
                             />
                         )}
                     />
@@ -201,6 +230,28 @@ function FormCard() {
                                 variant="outlined"
                                 label="Partner University"
                                 placeholder="Select partner university(s)"
+                            />
+                        )}
+                    />
+                    <Autocomplete
+                        multiple
+                        filterSelectedOptions
+                        disableCloseOnSelect
+                        fullWidth
+                        options={options.faculty}
+                        getOptionLabel={(option) => option.label}
+                        value={options.faculty.filter((option) =>
+                            formValues.faculty.includes(option.id)
+                        )}
+                        onChange={(event, value) =>
+                            handleChange("faculty", value)
+                        }
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                variant="outlined"
+                                label="Faculty"
+                                placeholder="Select faculty(s)"
                             />
                         )}
                     />
