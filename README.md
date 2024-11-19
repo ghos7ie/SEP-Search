@@ -1,10 +1,6 @@
 # SEP Search
  Filtering through Edurec's site takes a long and arduous time. This site serves to speed up that process and also make it easier to search multiple universities for offerred modules.
 
-# Motivation
-1. To learn React + MERN
-2. BEEF MY PORTFOLIO
-
 # Tech Stack
 - Database - PostgreSQL
 - Backend - ExpressJS
